@@ -38,8 +38,8 @@ public class OpenbankController {
 	    return "Hello " + name;
 	}
 
-	@GetMapping("/accounts/{accountId}/transactions")
-    public Transactions transactionsId(String accountId) {
+	@GetMapping("/accounts")
+    public Transactions transactionsId(@RequestParam(name = "accountId", defaultValue = "0") String accountId) {
         List<String> list = new ArrayList<>();
         list.add("Table data...");
         return jdbcTemplate.queryForObject(
