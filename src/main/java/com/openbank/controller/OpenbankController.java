@@ -19,21 +19,33 @@ import com.openbank.jdbc.Transactions;
 @RequestMapping("test")
 public class OpenbankController {
 
-    @Autowired
-    JdbcTemplate jdbcTemplate;
+	@Autowired
+	JdbcTemplate jdbcTemplate;
 
-    @GetMapping("/transactions")
-    public @ResponseBody ResponseEntity<String> transactions() {
+	@GetMapping("/transactions")
+	public @ResponseBody ResponseEntity<String> transactions() {
+		List<String> list = new ArrayList<>();
+		list.add("Table data...");
+		jdbcTemplate.query("SELECT * FROM transactions", new Object[] {},
+				(rs, rowNum) -> new Transactions(rs.getString("accountId"), rs.getString("transactionId"),
+						rs.getString("transactionInformation"), rs.getString("addressLine"), rs.getString("amount")))
+				.forEach(thing -> list.add(thing.toString()));
+		return new ResponseEntity<String>(list.toString(), HttpStatus.OK);
+	}
+
+	@GetMapping("/hello")
+	public String sayHello(@RequestParam(value = "myName", defaultValue = "World") String name) {
+		return String.format("Hello %s!", name);
+	}
+
+	@GetMapping("/accounts/{accountId}/transactions")
+    public Transactions transactionsId(String accountId) {
         List<String> list = new ArrayList<>();
         list.add("Table data...");
-        jdbcTemplate.query(
-                "SELECT * FROM transactions", new Object[]{},
-                (rs,rowNum) -> new Transactions(rs.getString("accountId"), rs.getString("transactionId"), rs.getString("transactionInformation"), rs.getString("addressLine"), rs.getString("amount")))
-                .forEach(thing -> list.add(thing.toString()));
-        return new ResponseEntity<String>(list.toString(), HttpStatus.OK);
+        return jdbcTemplate.queryForObject(
+                "SELECT * FROM transactions WHERE accountId=?", new Object[]{ accountId },
+                (rs,rowNum) -> new Transactions(rs.getString("accountId"), rs.getString("transactionId"), rs.getString("transactionInformation"), rs.getString("addressLine"), rs.getString("amount")));
+
     }
-    @GetMapping("/hello")
-    public String sayHello(@RequestParam(value = "myName", defaultValue = "World") String name) {
-        return String.format("Hello %s!", name);
-    }
+
 }
