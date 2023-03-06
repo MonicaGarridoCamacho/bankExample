@@ -1,4 +1,4 @@
-package com.openbank.controller;
+package com.banking.controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,11 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.openbank.jdbc.Transactions;
+import com.banking.jdbc.Transactions;
 
 @RestController
 @RequestMapping("test")
-public class OpenbankController {
+public class BankingController {
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;

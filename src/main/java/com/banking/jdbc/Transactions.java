@@ -1,4 +1,4 @@
-package com.openbank.jdbc;
+package com.banking.jdbc;
 
 public class Transactions {
 
