@@ -17,11 +17,12 @@ pipeline {
     }
     stage ('Sonar') {
       steps {
-        withSonarQubeEnv('SonarQube')
-        sh 'mvn clean verify sonar:sonar \
+        withSonarQubeEnv('SonarQube'){
+          sh 'mvn clean verify sonar:sonar \
             -Dsonar.projectKey=maven-jenkins-pipeline \
             -Dsonar.host.url=https://sonar-alpha.apps.cluster-rxzc9.rxzc9.sandbox3065.opentlc.com \
             -Dsonar.login=sqp_b25140813e891fb5d2021aa2fe04dc6eddfef58e'
+        }      
       }
     }
   }
