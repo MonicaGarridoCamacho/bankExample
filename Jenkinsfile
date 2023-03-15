@@ -13,9 +13,9 @@ pipeline {
     stage ('Static code analysis') {
       steps {
         sh 'mvn clean verify sonar:sonar \
-            -Dsonar.projectKey=maven-jenkins-pipeline \
-            -Dsonar.host.url=https://sonar-alpha.apps.cluster-rxzc9.rxzc9.sandbox3065.opentlc.com \
-            -Dsonar.login=sqp_b25140813e891fb5d2021aa2fe04dc6eddfef58e'
+  -Dsonar.projectKey=maven-jenkins-pipeline \
+  -Dsonar.host.url=https://sonar-devops.apps.cluster-kl7bv.kl7bv.sandbox3032.opentlc.com \
+  -Dsonar.login=sqp_8e3b5f4a21055e4118632f1264cf5d0cd3076222'
       }
     }
     stage ('Build') {
