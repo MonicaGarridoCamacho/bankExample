@@ -10,6 +10,11 @@ pipeline {
         echo 'Code repo & code review'
       }
     }
+    stage("Checkout") {
+      steps {
+        checkout scm
+      }
+    }
     stage ('Static code analysis') {
       steps {
         sh 'mvn clean verify sonar:sonar \
