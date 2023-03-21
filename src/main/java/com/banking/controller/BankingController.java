@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,8 +26,8 @@ public class BankingController {
 	JdbcTemplate jdbcTemplate;
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/transactions")
-	public @ResponseBody List<JSONObject> transactions() {
-		List<Transactions> list = new ArrayList<Transactions>();
+	public @ResponseBody ResponseEntity<String> transactions() {
+		/*List<Transactions> list = new ArrayList<Transactions>();
 		List<JSONObject> listJSON = new ArrayList<JSONObject>();
 		jdbcTemplate.query("SELECT * FROM transactions", new Object[] {},
 				(rs, rowNum) -> new Transactions(rs.getString("accountId"), rs.getString("transactionId"),
@@ -34,7 +36,30 @@ public class BankingController {
 		 
 		System.out.println("list Moni " + list);
 	    //This part is not working.
-	    try {
+	    /*try {
+	    	
+	        for (Transactions tr : list) {
+	        	JSONObject json = new JSONObject();
+	        	json.put("accountId", tr.getAccountId());
+	        	json.put("transactionId", tr.getTransactionId());
+	        	json.put("transactionInformation", tr.getTransactionInformation());
+	        	json.put("addressLine", tr.getAddressLine());
+	        	json.put("amount", tr.getAmount());
+	        	listJSON.add(json);
+	        }
+	    } catch (Exception e) {
+	    }*/
+	   
+	   /* return ResponseEntity<String>(list.toString(), HttpStatus.OK);*/
+		List<Transactions> list = new ArrayList<Transactions>();
+		List<JSONObject> listJSON = new ArrayList<JSONObject>();
+		jdbcTemplate.query("SELECT * FROM transactions", new Object[] {},
+				(rs, rowNum) -> new Transactions(rs.getString("accountId"), rs.getString("transactionId"),
+						rs.getString("transactionInformation"), rs.getString("addressLine"), rs.getString("amount")))
+				.forEach(thing -> list.add(0, thing));
+		 
+		System.out.println("list Moni " + list);
+		try {
 	    	
 	        for (Transactions tr : list) {
 	        	JSONObject json = new JSONObject();
@@ -47,8 +72,7 @@ public class BankingController {
 	        }
 	    } catch (Exception e) {
 	    }
-	    System.out.println("list Moni listJSON " + listJSON);
-	    return listJSON;
+		return new ResponseEntity<String>(listJSON.toString(), HttpStatus.OK); 
 	}
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/hello")
