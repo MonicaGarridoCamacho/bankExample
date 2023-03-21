@@ -25,7 +25,7 @@ public class BankingController {
 	JdbcTemplate jdbcTemplate;
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/transactions")
-	public @ResponseBody ResponseEntity<String> transactions() {
+	public @ResponseBody JSONObject transactions() {
 		List<String> list = new ArrayList<>();
 		jdbcTemplate.query("SELECT * FROM transactions", new Object[] {},
 				(rs, rowNum) -> new Transactions(rs.getString("accountId"), rs.getString("transactionId"),
@@ -34,6 +34,7 @@ public class BankingController {
 		//return new ResponseEntity<String>(list.toString(), HttpStatus.OK);
 		//This part is not working.
 		System.out.println("listMoni : " + list);
+		System.out.println("arrayJSON : " + new JSONObject((list)));
 	    /*try {
 	        JSONObject arr = new JSONObject((list));
 	        for (int i = 0; i < arr.length(); i++) {
@@ -45,7 +46,7 @@ public class BankingController {
 	    } catch (Exception e) {
 	    }*/
 
-	    return result;
+	    return new JSONObject((list));
 	}
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/hello")
