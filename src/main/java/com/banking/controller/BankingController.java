@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +24,7 @@ public class BankingController {
 	JdbcTemplate jdbcTemplate;
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/transactions")
-	public @ResponseBody ResponseEntity<String> transactions() {
+	public @ResponseBody List<JSONObject> transactions() {
 		List<Transactions> list = new ArrayList<Transactions>();
 		List<JSONObject> listJSON = new ArrayList<JSONObject>();
 		jdbcTemplate.query("SELECT * FROM transactions", new Object[] {},
@@ -49,7 +48,7 @@ public class BankingController {
 	    } catch (Exception e) {
 	    }
 	    System.out.println("list Moni listJSON " + listJSON);
-	    return (ResponseEntity<String>) listJSON;
+	    return listJSON;
 	}
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/hello")
