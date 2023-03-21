@@ -56,7 +56,7 @@ public class BankingController {
 		jdbcTemplate.query("SELECT * FROM transactions", new Object[] {},
 				(rs, rowNum) -> new Transactions(rs.getString("accountId"), rs.getString("transactionId"),
 						rs.getString("transactionInformation"), rs.getString("addressLine"), rs.getString("amount")))
-				.forEach(thing -> list.add(0, thing));
+				.forEach(thing -> list.add(list.size()-1, thing));
 		 
 		System.out.println("list Moni " + list);
 		try {
