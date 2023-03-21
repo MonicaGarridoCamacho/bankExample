@@ -33,7 +33,7 @@ public class BankingController {
 				"select json_object ('accountId' value accountId,'transactionId' value transactionId,'transactionInformation' value transactionInformation,'addressLine' value addressLine,'amount' value amount)from transactions;");
 		
 		 */
-		jdbcTemplate.query("SELECT * FROM transactions", new Object[] {}, (rs,
+		jdbcTemplate.query("select json_object ('accountId' value accountId,                    'transactionId' value transactionId,                    'transactionInformation' value transactionInformation,                    'addressLine' value addressLine,                    'amount' value amount                     absent on null)from transactions;", new Object[] {}, (rs,
 		 rowNum) -> new Transactions(rs.getString("accountId"),
 		 rs.getString("transactionId"), rs.getString("transactionInformation"),
 		 rs.getString("addressLine"), rs.getString("amount"))) .forEach(thing ->
