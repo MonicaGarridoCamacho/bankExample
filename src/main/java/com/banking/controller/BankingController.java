@@ -3,6 +3,7 @@ package com.banking.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,31 +24,39 @@ public class BankingController {
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
+
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/transactions")
-	public @ResponseBody ResponseEntity<String> transactions() {
+	public JSONArray transactions() {
 		List<String> list = new ArrayList<>();
-		list.add("Table data...");
-		jdbcTemplate.query("SELECT * FROM transactions", new Object[] {},
-				(rs, rowNum) -> new Transactions(rs.getString("accountId"), rs.getString("transactionId"),
-						rs.getString("transactionInformation"), rs.getString("addressLine"), rs.getString("amount")))
-				.forEach(thing -> list.add(thing.toString()));
-		return new ResponseEntity<String>(list.toString(), HttpStatus.OK);
+		/*jdbcTemplate.execute(
+				"select json_object ('accountId' value accountId,'transactionId' value transactionId,'transactionInformation' value transactionInformation,'addressLine' value addressLine,'amount' value amount)from transactions;");
+		
+		 */
+		jdbcTemplate.query("SELECT * FROM transactions", new Object[] {}, (rs,
+		 rowNum) -> new Transactions(rs.getString("accountId"),
+		 rs.getString("transactionId"), rs.getString("transactionInformation"),
+		 rs.getString("addressLine"), rs.getString("amount"))) .forEach(thing ->
+		 list.add(thing.toString()));
+		 JSONArray ja = new JSONArray(list);
+		 return ja;
 	}
+
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/hello")
 	public String hello(@RequestParam(name = "name", defaultValue = "World") String name) {
-	    return "Hello " + name;
+		return "Hello " + name;
 	}
+
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/accounts")
-    public Transactions transactionsId(@RequestParam(name = "accountId", defaultValue = "0") String accountId) {
-        List<String> list = new ArrayList<>();
-        list.add("Table data...");
-        return jdbcTemplate.queryForObject(
-                "SELECT * FROM transactions WHERE accountId=?", new Object[]{ accountId },
-                (rs,rowNum) -> new Transactions(rs.getString("accountId"), rs.getString("transactionId"), rs.getString("transactionInformation"), rs.getString("addressLine"), rs.getString("amount")));
+	public Transactions transactionsId(@RequestParam(name = "accountId", defaultValue = "0") String accountId) {
+		List<String> list = new ArrayList<>();
+		list.add("Table data...");
+		return jdbcTemplate.queryForObject("SELECT * FROM transactions WHERE accountId=?", new Object[] { accountId },
+				(rs, rowNum) -> new Transactions(rs.getString("accountId"), rs.getString("transactionId"),
+						rs.getString("transactionInformation"), rs.getString("addressLine"), rs.getString("amount")));
 
-    }
+	}
 
 }
