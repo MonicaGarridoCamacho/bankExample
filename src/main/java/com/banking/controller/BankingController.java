@@ -3,7 +3,6 @@ package com.banking.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -25,23 +24,26 @@ public class BankingController {
 	JdbcTemplate jdbcTemplate;
 	@CrossOrigin(origins = "http://localhost:4200")
 	@GetMapping("/transactions")
-	public @ResponseBody JSONArray transactions() {
-		List<String> list = new ArrayList<>();
-		JSONArray listJSON = new JSONArray();
+	public @ResponseBody List<JSONObject> transactions() {
+		List<Transactions> list = new ArrayList<Transactions>();
+		List<JSONObject> listJSON = new ArrayList<JSONObject>();
 		jdbcTemplate.query("SELECT * FROM transactions", new Object[] {},
 				(rs, rowNum) -> new Transactions(rs.getString("accountId"), rs.getString("transactionId"),
 						rs.getString("transactionInformation"), rs.getString("addressLine"), rs.getString("amount")))
-				.forEach(thing -> list.add(thing.toString()));
+				.forEach(thing -> list.add(0, thing));
 		 
 		System.out.println("list Moni " + list);
 	    //This part is not working.
 	    try {
 	    	
-	        for (int i = 0; i < list.size(); i++) {
-	        	JSONObject json = new JSONObject();	
-	        	System.out.println("list Moni Objeto" + list.get(i));
-	        	json.put("key1", list.get(i));
-	        	listJSON.put(json);
+	        for (Transactions tr : list) {
+	        	JSONObject json = new JSONObject();
+	        	json.put("accountId", tr.getAccountId());
+	        	json.put("transactionId", tr.getTransactionId());
+	        	json.put("transactionInformation", tr.getTransactionInformation());
+	        	json.put("addressLine", tr.getAddressLine());
+	        	json.put("amount", tr.getAmount());
+	        	listJSON.add(json);
 	        }
 	    } catch (Exception e) {
 	    }
